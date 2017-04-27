@@ -4,9 +4,10 @@ Created on Mar 23 11:34 2017
 
 @author: Denis Tome'
 """
-import tensorflow as tf
-import cpm
 import cPickle as pickle
+import tensorflow as tf
+
+from utils import cpm
 from utils.config import config
 
 

@@ -10,7 +10,7 @@ This project is licensed under the terms of the GNU GPLv3 license. By using the 
 
 The code is compatible with python2.7
 - [Tensorflow 1.0](https://www.tensorflow.org/)
-- [OpenCv](http://opencv.org/)
+- [OpenCV](http://opencv.org/)
 
 ## Models
 

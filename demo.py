@@ -4,14 +4,13 @@ Created on Dec 20 17:39 2016
 
 @author: Denis Tome'
 """
-import numpy as np
-import cv2
-import utils.config as config
 import tensorflow as tf
-import cpm
-from utils.draw import *
-from prob_model import Prob3dPose
+
+import utils.config as config
 import utils.process as ut
+from utils import cpm
+from utils.draw import *
+from utils.prob_model import Prob3dPose
 
 fname = 'images/test_image.png'
 
@@ -74,7 +73,7 @@ plt.axis('off')
 
 # Show 3D poses
 for single_3D in pose3D:
-    plot_pose(single_3D)
+    plot_pose(poseLifting.centre_all(single_3D))
 
 plt.show()
 
