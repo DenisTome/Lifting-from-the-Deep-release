@@ -1,0 +1,8 @@
+*.pyc
+*~
+*.so
+*.cpp
+
+# folders
+saved_sessions
+utils/external/build
