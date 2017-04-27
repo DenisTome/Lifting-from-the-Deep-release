@@ -3,13 +3,14 @@ Denis Tome', Chris Russell, Lourdes Agapito
 
 [Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image](https://arxiv.org/abs/1701.00295), CVPR 2017
 
-This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/LICENSE)).
+This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/cpm_tensorflow/blob/public/LICENSE)).
 
-![Teaser?](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/images/teaser-github.png)
+![Teaser?](https://github.com/DenisTome/cpm_tensorflow/blob/public/images/teaser-github.png)
 ## Dependencies
 
-- [Tensorflow](https://www.tensorflow.org/)
-- [Cython](http://cython.readthedocs.io/en/latest/src/quickstart/install.html)
+The code is compatible with python2.7
+- [Tensorflow 1.0](https://www.tensorflow.org/)
+- [OpenCv](http://opencv.org/)
 
 ## Models
 
@@ -27,9 +28,9 @@ For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://gi
 
 ## Citation
 
-    @article{tome2017lifting,
-        title={Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image},
-        author={Tome, Denis and Russell, Chris and Agapito, Lourdes},
-        journal={arXiv preprint arXiv:1701.00295},
-        year={2017}
-      }
+	@article{tome2017lifting,
+	    title={Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image},
+	    author={Tome, Denis and Russell, Chris and Agapito, Lourdes},
+	    journal={arXiv preprint arXiv:1701.00295},
+	    year={2017}
+	}

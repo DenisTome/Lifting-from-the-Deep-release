@@ -17,7 +17,11 @@ rm -rf pose_MPI.tar.gz
 rm -rf prob_model.tar.gz
 cd ..
 
-echo 'Compiling dependencies...'
+echo 'Installing dependencies...'
+pip install Cython
+pip install scikit-image
+
+echo 'Compiling external utilities...'
 cd utils/external/
 python setup_fast_rot.py build
 cd ../../
