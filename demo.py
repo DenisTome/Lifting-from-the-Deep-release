@@ -37,24 +37,18 @@ with tf.variable_scope('CPM'):
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver = tf.train.Saver()
-    saver.restore(sess, 'saved_sessions/person_MPI/init')
+    saver.restore(sess, 'saved_sessions/init_session/init')
     hmap_person = sess.run(heatmap_person_large, {image_in: b_image})
 
-hmap_person = np.squeeze(hmap_person)
-centers = ut.detect_objects_heatmap(hmap_person)
-b_pose_image, b_pose_cmap = ut.prepare_input_posenet(b_image[0], centers, [config.INPUT_SIZE, image.shape[1]],
-                                                     [config.INPUT_SIZE, config.INPUT_SIZE])
-
-# sess = tf.InteractiveSession()
-with tf.Session() as sess:
-    saver = tf.train.Saver()
-    saver.restore(sess, 'saved_sessions/pose_MPI/init')
+    hmap_person = np.squeeze(hmap_person)
+    centers = ut.detect_objects_heatmap(hmap_person)
+    b_pose_image, b_pose_cmap = ut.prepare_input_posenet(b_image[0], centers, [config.INPUT_SIZE, image.shape[1]],
+                                                         [config.INPUT_SIZE, config.INPUT_SIZE])
 
     feed_dict = {
         pose_image_in: b_pose_image,
         pose_centermap_in: b_pose_cmap
     }
-
     _hmap_pose = sess.run(heatmap_pose, feed_dict)
 
 # Estimate 2D poses
@@ -73,7 +67,8 @@ plt.axis('off')
 
 # Show 3D poses
 for single_3D in pose3D:
-    plot_pose(poseLifting.centre_all(single_3D))
+    # or plot_pose(Prob3dPose.centre_all(single_3D))
+    plot_pose(single_3D)
 
 plt.show()
 

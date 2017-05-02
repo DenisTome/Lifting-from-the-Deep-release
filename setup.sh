@@ -4,16 +4,13 @@ mkdir saved_sessions
 cd saved_sessions
 
 echo 'Downloading models...'
-wget http://visual.cs.ucl.ac.uk/pubs/liftingFromTheDeep/res/person_MPI.tar.gz
-wget http://visual.cs.ucl.ac.uk/pubs/liftingFromTheDeep/res/pose_MPI.tar.gz
+wget http://visual.cs.ucl.ac.uk/pubs/liftingFromTheDeep/res/init_session.tar.gz
 wget http://visual.cs.ucl.ac.uk/pubs/liftingFromTheDeep/res/prob_model.tar.gz
 
 echo 'Extracting models...'
-tar -xvzf person_MPI.tar.gz
-tar -xvzf pose_MPI.tar.gz
+tar -xvzf init_session.tar.gz
 tar -xvzf prob_model.tar.gz
-rm -rf person_MPI.tar.gz
-rm -rf pose_MPI.tar.gz
+rm -rf init_session.tar.gz
 rm -rf prob_model.tar.gz
 cd ..
 
