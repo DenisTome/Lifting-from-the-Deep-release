@@ -34,3 +34,7 @@ For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://gi
 	    journal={arXiv preprint arXiv:1701.00295},
 	    year={2017}
 	}
+
+## Notes
+
+The models provided for the demo are NOT the ones that have been used to generate results for the paper. We are still in the process of converting all the code.
