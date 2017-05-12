@@ -3,9 +3,9 @@ Denis Tome', Chris Russell, Lourdes Agapito
 
 [Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image](https://arxiv.org/abs/1701.00295), CVPR 2017
 
-This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/cpm_tensorflow/blob/public/LICENSE)).
+This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/LICENSE)).
 
-![Teaser?](https://github.com/DenisTome/cpm_tensorflow/blob/public/images/teaser-github.png)
+![Teaser?](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/images/teaser-github.png)
 ## Dependencies
 
 The code is compatible with python2.7

@@ -88,16 +88,20 @@ class Prob3dPose:
         return (data.transpose(2, 0, 1) - data.mean(2)).transpose(1, 2, 0)
 
     @staticmethod
-    def normalise_data(d2):
-        """Normalise data according to hight"""
-        d2 = Prob3dPose.centre_all(d2.reshape(d2.shape[0], -1, 2).transpose(0, 2, 1))
+    def normalise_data(d2, weights):
+        """Normalise data according to height"""
+
+        # the joints with weight set to 0 should not be considered in the normalisation process
+        idx_consider = weights[0, 0].astype(np.bool)
+        d2 = d2.reshape(d2.shape[0], -1, 2).transpose(0, 2, 1)
+        d2[:, :, idx_consider] = Prob3dPose.centre_all(d2[:, :, idx_consider])
 
         # Height normalisation (2 meters)
-        m2 = d2[:, 1, :].min(1) / 2.0
-        m2 -= d2[:, 1, :].max(1) / 2.0
+        m2 = d2[:, 1, idx_consider].min(1) / 2.0
+        m2 -= d2[:, 1, idx_consider].max(1) / 2.0
         crap = m2 == 0
         m2[crap] = 1.0
-        d2 /= m2[:, np.newaxis, np.newaxis]
+        d2[:, :, idx_consider] /= m2[:, np.newaxis, np.newaxis]
         return d2, m2
 
     @staticmethod
@@ -212,9 +216,9 @@ class Prob3dPose:
             for oid, singe_pose in enumerate(pose_2d):
                 reg_joints[oid, _J_POS] = singe_pose
 
-            norm_pose, _ = Prob3dPose.normalise_data(reg_joints)
+            norm_pose, _ = Prob3dPose.normalise_data(reg_joints, weights)
         else:
-            norm_pose, _ = Prob3dPose.normalise_data(pose_2d)
+            norm_pose, _ = Prob3dPose.normalise_data(pose_2d, weights)
 
         pose_3d = self.create_rec(norm_pose, weights)*_SCALE_3D
         return pose_3d
