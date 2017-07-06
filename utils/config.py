@@ -7,6 +7,7 @@ Created on Mar 23 11:57 2017
 
 # threshold
 VISIBLE_PART = 1e-3
+MIN_NUM_JOINTS = 5
 CENTER_TR = 0.4
 
 # net attributes

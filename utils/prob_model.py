@@ -92,8 +92,10 @@ class Prob3dPose:
         """Normalise data according to height"""
 
         # the joints with weight set to 0 should not be considered in the normalisation process
-        idx_consider = weights[0, 0].astype(np.bool)
         d2 = d2.reshape(d2.shape[0], -1, 2).transpose(0, 2, 1)
+        idx_consider = weights[0, 0].astype(np.bool)
+        if np.sum(weights[:, 0].sum(1) >= config.MIN_NUM_JOINTS) == 0:
+            raise Exception('Not enough 2D joints identified to generate 3D pose')
         d2[:, :, idx_consider] = Prob3dPose.centre_all(d2[:, :, idx_consider])
 
         # Height normalisation (2 meters)
