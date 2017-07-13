@@ -6,12 +6,11 @@ Created on Dec 20 17:39 2016
 @author: Denis Tome'
 """
 import cv2
-import os
 from graph_functions import PoseEstimator
 from utils import draw_limbs
 from utils import plot_pose
 import matplotlib.pyplot as plt
-
+from os.path import dirname, realpath
 
 def main():
     image_file_name = 'images/test_image.png'
@@ -20,9 +19,9 @@ def main():
 
     # create pose estimator
     image_size = image.shape
-    session_dir = os.path.dirname(__file__)
+    session_dir = dirname(realpath(__file__))
     session_path = session_dir + '/saved_sessions/init_session/init'
-
+    
     pose_estimator = PoseEstimator(image_size, session_path)
 
     # load model and run evaluation on image

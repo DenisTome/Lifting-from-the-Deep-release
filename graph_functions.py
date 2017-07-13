@@ -56,7 +56,6 @@ class PoseEstimator(PoseEstimatorInterface):
         OUTPUT:
             sess: tensorflow session"""
 
-        session_path = self.session_path
         _N = 16
 
         tf.reset_default_graph()
@@ -85,7 +84,8 @@ class PoseEstimator(PoseEstimatorInterface):
         sess = tf.Session()
         sess.run(tf.global_variables_initializer())
         saver = tf.train.Saver()
-        saver.restore(sess, session_path)
+        saver.restore(sess, self.session_path)
+
         self.session = sess
 
     def estimate(self, image):
