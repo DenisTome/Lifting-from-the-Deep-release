@@ -80,6 +80,7 @@ def prepare_input_posenet(image, objects, size_person, size, sigma=25, max_num_o
 
 
 def detect_parts_heatmaps(heatmaps, centers, size, num_parts=14):
+    """Given heat-maps find the position of each joint by means of n argmax function"""
     parts = np.zeros((len(centers), num_parts, 2), dtype=np.int32)
     visible = np.zeros((len(centers), num_parts), dtype=bool)
     for oid, (yc, xc) in enumerate(centers):

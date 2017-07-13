@@ -6,6 +6,15 @@ Denis Tome', Chris Russell, Lourdes Agapito
 This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/LICENSE)).
 
 ![Teaser?](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/images/teaser-github.png)
+## Abstract
+
+We propose a unified formulation for the problem of 3D human pose estimation from a single raw RGB image
+that reasons jointly about 2D joint estimation and 3D pose reconstruction to improve both tasks. We take an integrated
+approach that fuses probabilistic knowledge of 3D human pose with a multi-stage CNN architecture and uses
+the knowledge of plausible 3D landmark locations to refine the search for better 2D locations. The entire process is
+trained end-to-end, is extremely efficient and obtains stateof-the-art results on Human3.6M outperforming previous
+approaches both on 2D and 3D errors.
+
 ## Dependencies
 
 The code is compatible with python2.7
@@ -13,8 +22,6 @@ The code is compatible with python2.7
 - [OpenCV](http://opencv.org/)
 
 ## Models
-
-The architecture extends the one proposed in [Convolutional Pose Machines (CPM)](https://github.com/shihenw/convolutional-pose-machines-release).
 
 For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://github.com/shihenw/convolutional-pose-machines-release/tree/master/model)) are used for **2D pose estimation**, whereas for **3D pose estimation** our probabilistic 3D pose model is trained on the [Human3.6M dataset](http://vision.imar.ro/human3.6m/description.php).
 
@@ -38,3 +45,7 @@ For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://gi
 ## Notes
 
 The models provided for the demo are NOT the ones that have been used to generate results for the paper. We are still in the process of converting all the code.
+
+## References
+
+- [Convolutional Pose Machines (CPM)](https://github.com/shihenw/convolutional-pose-machines-release).
