@@ -1,7 +1,7 @@
 # Lifting from the Deep
 Denis Tome', Chris Russell, Lourdes Agapito
 
-[Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image](https://arxiv.org/abs/1701.00295), CVPR 2017
+[Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image](http://openaccess.thecvf.com/content_cvpr_2017/papers/Tome_Lifting_From_the_CVPR_2017_paper.pdf), CVPR 2017
 
 This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/LICENSE)).
 
@@ -35,11 +35,12 @@ For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://gi
 
 ## Citation
 
-	@article{tome2017lifting,
-	    title={Lifting from the Deep: Convolutional 3D Pose Estimation from a Single Image},
-	    author={Tome, Denis and Russell, Chris and Agapito, Lourdes},
-	    journal={arXiv preprint arXiv:1701.00295},
-	    year={2017}
+	@InProceedings{Tome_2017_CVPR,
+	author = {Tome, Denis and Russell, Chris and Agapito, Lourdes},
+	title = {Lifting From the Deep: Convolutional 3D Pose Estimation From a Single Image},
+	booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	month = {July},
+	year = {2017}
 	}
 
 ## Notes
