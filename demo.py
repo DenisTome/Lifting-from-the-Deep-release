@@ -12,6 +12,7 @@ from utils import plot_pose
 import matplotlib.pyplot as plt
 from os.path import dirname, realpath
 
+
 def main():
     image_file_name = 'images/test_image.png'
     image = cv2.imread(image_file_name)
