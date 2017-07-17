@@ -198,11 +198,16 @@ def estimate_a_and_r_with_res_weights(w, e, s0, camera_r, Lambda, check, a, weig
     return aa, r, retres
 
 
-def pick_e(w, e, s0, camera_r=np.asarray([[1, 0, 0], [0, 0, -1], [0, 1, 0]]), Lambda=np.ones((0, 0)),
-           weights=np.ones((0, 0, 0)), scale_prior=-0.0014, interval=0.01, depth_reg=0.0325):
+def pick_e(w, e, s0, camera_r=None, Lambda=None,
+           weights=None, scale_prior=-0.0014, interval=0.01, depth_reg=0.0325):
     """Brute force over charts from the manifold to find the best one.
         Returns best chart index and its a and r coefficients
         Returns assignment, and a and r coefficents"""
+
+    camera_r = np.asarray([[1, 0, 0], [0, 0, -1], [0, 1, 0]]) if camera_r is None else camera_r
+    Lambda = np.ones((0, 0)) if Lambda is None else Lambda
+    weights = np.ones((0, 0, 0)) if weights is None else weights
+
     charts = e.shape[0]
     frames = w.shape[0]
     basis = e.shape[1]

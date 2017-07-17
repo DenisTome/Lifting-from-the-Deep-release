@@ -55,10 +55,12 @@ def gaussian_kernel(h, w, sigma_h, sigma_w):
     return np.exp(-yx[0, :, :] / sigma_h ** 2 - yx[1, :, :] / sigma_w ** 2)
 
 
-def gaussian_heatmap(h, w, pos_x, pos_y, sigma_h=1, sigma_w=1, init=[]):
+def gaussian_heatmap(h, w, pos_x, pos_y, sigma_h=1, sigma_w=1, init=None):
     """Compute the heat-map of size (w x h) with a gaussian distribution fit in
     position (pos_x, pos_y) and a convariance matix defined by the related sigma values.
     The resulting heat-map can be summed to a given heat-map init."""
+    init = init if init is not None else []
+
     cov_matrix = np.eye(2) * ([sigma_h**2, sigma_w**2])
 
     x, y = np.mgrid[0:h, 0:w]

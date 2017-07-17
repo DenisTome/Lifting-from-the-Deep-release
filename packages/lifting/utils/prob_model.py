@@ -132,9 +132,11 @@ class Prob3dPose:
         weights[:, :, _W_POS] = ordered_visibility
         return new_pose, weights
 
-    def affine_estimate(self, w, depth_reg=0.085, weights=np.zeros((0, 0, 0)), scale=10.0,
+    def affine_estimate(self, w, depth_reg=0.085, weights=None, scale=10.0,
                         scale_mean=0.0016 * 1.8 * 1.2, scale_std=1.2 * 0, cap_scale=-0.00129):
         """Quick switch to allow reconstruction at unknown scale returns a,r and scale"""
+        weights = np.zeros((0, 0, 0)) if weights is None else weights
+
         s = np.empty((self.sigma.shape[0], self.sigma.shape[1] + 4))  # e,y,x,z
         s[:, :4] = 10 ** -5  # Tiny but makes stuff well-posed
         s[:, 0] = scale_std
