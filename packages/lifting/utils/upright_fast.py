@@ -36,7 +36,15 @@ def update_cam(cam):
 def estimate_a_and_r_with_res(
         w, e, s0, camera_r, Lambda, check, a, weights, res, proj_e,
         residue, Ps, depth_reg, scale_prior):
-    """So local optima are a problem in general.
+    """
+    TODO: Missing the following parameters in docstring:
+        - w, e, s0, camera_r, Lambda, check, a, res, proj_e, depth_reg,
+          scale_prior
+
+    TODO: The following parameters are not used:
+        - s0, weights
+
+    So local optima are a problem in general.
     However:
 
         1. This problem is convex in a but not in r, and
@@ -93,6 +101,9 @@ def estimate_a_and_r_with_res(
                 e.shape[0], 2 * points)
 
         if Lambda.size != 0:
+            """
+            TODO: Variable d might be reference before assignment
+            """
             proj_e[:, 2 * points:2 * points + basis] = d
             res[:, 2 * points:].fill(0)
             res[:, :points * 2] *= Lambda[Lambda.shape[0] - 1]
@@ -127,7 +138,12 @@ def estimate_a_and_r_with_res(
 def estimate_a_and_r_with_res_weights(
         w, e, s0, camera_r, Lambda, check, a, weights, res, proj_e,
         residue, Ps, depth_reg, scale_prior):
-    """So local optima are a problem in general.
+    """
+    TODO: Missing the following parameters in docstring:
+     - w, e, s0, camera)r, Lambda, check, a, res, proj_e, residue,
+     Ps, depth_reg, scale_prior
+
+    So local optima are a problem in general.
     However:
 
         1. This problem is convex in a but not in r, and
@@ -185,6 +201,9 @@ def estimate_a_and_r_with_res_weights(
                 e.shape[0], 2 * points)
 
         if Lambda.size != 0:
+            """
+            TODO: Variable d might be reference before assignment
+            """
             proj_e[:, 2 * points:2 * points + basis] = d
             res[:, 2 * points:].fill(0)
             res[:, :points * 2] *= Lambda[Lambda.shape[0] - 1]
@@ -285,6 +304,9 @@ def pick_e(w, e, s0, camera_r=None, Lambda=None,
     l = Lambda.copy()
     l[Lambda == 0] = 1
     llambda = -np.log(l)
+    """
+    TODO: lgdet is assigned but not used
+    """
     lgdet = np.sum(llambda[:, :-1], 1) + llambda[:, -1] * remaining_dims
     score /= 2
     return score, a, r

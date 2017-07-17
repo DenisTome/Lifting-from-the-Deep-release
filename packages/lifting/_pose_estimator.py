@@ -61,6 +61,9 @@ class PoseEstimator(PoseEstimatorInterface):
         OUTPUT:
             sess: tensorflow session"""
 
+        '''
+        TODO: _N shadows built-in name '_N'
+        '''
         _N = 16
 
         tf.reset_default_graph()

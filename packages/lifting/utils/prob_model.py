@@ -27,7 +27,7 @@ class Prob3dPose:
 
     @staticmethod
     def cost3d(model, gt):
-        "3d error in mm"
+        """3d error in mm"""
         out = np.sqrt(((gt - model) ** 2).sum(1)).mean(-1)
         return out
 
