@@ -1,8 +1,10 @@
+.idea/
 *.pyc
 *~
 *.so
 *.cpp
 
+build/
+
 # folders
-saved_sessions
-utils/external/build
+saved_sessions/
