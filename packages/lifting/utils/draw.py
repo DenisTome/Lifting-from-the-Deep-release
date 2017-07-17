@@ -19,9 +19,13 @@ __all__ = [
 def draw_limbs(image, pose_2d, visible):
     """Draw the 2D pose without the occluded/not visible joints."""
 
-    _COLORS = [[0, 0, 255], [0, 170, 255], [0, 255, 170], [0, 255, 0], [170, 255, 0],
-               [255, 170, 0], [255, 0, 0], [255, 0, 170], [170, 0, 255]]
-    _LIMBS = np.array([0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9, 9, 10, 11, 12, 12, 13]).reshape((-1, 2))
+    _COLORS = [
+        [0, 0, 255], [0, 170, 255], [0, 255, 170], [0, 255, 0],
+        [170, 255, 0], [255, 170, 0], [255, 0, 0], [255, 0, 170],
+        [170, 0, 255]
+    ]
+    _LIMBS = np.array([0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9,
+                       9, 10, 11, 12, 12, 13]).reshape((-1, 2))
 
     for oid in xrange(pose_2d.shape[0]):
         for lid, (p0, p1) in enumerate(_LIMBS):
@@ -31,18 +35,22 @@ def draw_limbs(image, pose_2d, visible):
             y1, x1 = pose_2d[oid][p1]
             cv2.circle(image, (x0, y0), JOINT_DRAW_SIZE, _COLORS[lid], -1)
             cv2.circle(image, (x1, y1), JOINT_DRAW_SIZE, _COLORS[lid], -1)
-            cv2.line(image, (x0, y0), (x1, y1), _COLORS[lid], LIMB_DRAW_SIZE, 16)
+            cv2.line(image, (x0, y0), (x1, y1),
+                     _COLORS[lid], LIMB_DRAW_SIZE, 16)
 
 
 def plot_pose(pose):
     """Plot the 3D pose showing the joint connections."""
     import mpl_toolkits.mplot3d.axes3d as p3
 
-    _CONNECTION = [[0, 1], [1, 2], [2, 3], [0, 4], [4, 5], [5, 6], [0, 7], [7, 8], [8, 9],
-                   [9, 10], [8, 11], [11, 12], [12, 13], [8, 14], [14, 15], [15, 16]]
+    _CONNECTION = [
+        [0, 1], [1, 2], [2, 3], [0, 4], [4, 5], [5, 6], [0, 7], [7, 8],
+        [8, 9], [9, 10], [8, 11], [11, 12], [12, 13], [8, 14], [14, 15],
+        [15, 16]]
 
     def joint_color(j):
-        colors = [(0, 0, 0), (255, 0, 255), (0, 0, 255), (0, 255, 255), (255, 0, 0), (0, 255, 0)]
+        colors = [(0, 0, 0), (255, 0, 255), (0, 0, 255),
+                  (0, 255, 255), (255, 0, 0), (0, 255, 0)]
         _c = 0
         if j in range(1, 4):
             _c = 1
@@ -67,10 +75,10 @@ def plot_pose(pose):
                 [pose[2, c[0]], pose[2, c[1]]], c=col)
     for j in range(pose.shape[1]):
         col = '#%02x%02x%02x' % joint_color(j)
-        ax.scatter(pose[0, j], pose[1, j], pose[2, j], c=col, marker='o', edgecolor=col)
+        ax.scatter(pose[0, j], pose[1, j], pose[2, j],
+                   c=col, marker='o', edgecolor=col)
     smallest = pose.min()
     largest = pose.max()
     ax.set_xlim3d(smallest, largest)
     ax.set_ylim3d(smallest, largest)
     ax.set_zlim3d(smallest, largest)
-

@@ -17,10 +17,13 @@ class Prob3dPose:
 
     def __init__(self, prob_model_path):
         model_param = sio.loadmat(prob_model_path)
-        self.mu = np.reshape(model_param['mu'], (model_param['mu'].shape[0], 3, -1))
-        self.e = np.reshape(model_param['e'], (model_param['e'].shape[0], model_param['e'].shape[1], 3, -1))
+        self.mu = np.reshape(
+            model_param['mu'], (model_param['mu'].shape[0], 3, -1))
+        self.e = np.reshape(model_param['e'], (model_param['e'].shape[
+                            0], model_param['e'].shape[1], 3, -1))
         self.sigma = model_param['sigma']
-        self.cam = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]])
+        self.cam = np.array(
+            [[1.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]])
 
     @staticmethod
     def cost3d(model, gt):
@@ -31,8 +34,10 @@ class Prob3dPose:
     @staticmethod
     def renorm_gt(gt):
         """Compel gt data to have mean joint length of one"""
-        _POSE_TREE = np.asarray([[0, 1], [1, 2], [2, 3], [0, 4], [4, 5], [5, 6], [0, 7], [7, 8], [8, 9],
-                                [9, 10], [8, 11], [11, 12], [12, 13], [8, 14], [14, 15], [15, 16]]).T
+        _POSE_TREE = np.asarray([
+            [0, 1], [1, 2], [2, 3], [0, 4], [4, 5], [5, 6], [0, 7], [7, 8],
+            [8, 9], [9, 10], [8, 11], [11, 12], [12, 13], [8, 14], [14, 15],
+            [15, 16]]).T
         scale = np.sqrt(((gt[:, :, _POSE_TREE[0]] -
                           gt[:, :, _POSE_TREE[1]]) ** 2).sum(2).sum(1))
         return gt / scale[:, np.newaxis, np.newaxis]
@@ -49,7 +54,9 @@ class Prob3dPose:
 
     @staticmethod
     def build_and_rot_model(a, e, s0, r):
-        """Build model and rotate according to the identified rotation matrix"""
+        """
+        Build model and rotate according to the identified rotation matrix
+        """
         from numpy.core.umath_tests import matrix_multiply
 
         r2 = Prob3dPose.upgrade_r(r.T).transpose((0, 2, 1))
@@ -59,10 +66,13 @@ class Prob3dPose:
 
     @staticmethod
     def upgrade_r(r):
-        """Upgrades complex parameterisation of planar rotation to tensor containing
-        per frame 3x3 rotation matrices"""
+        """
+        Upgrades complex parameterisation of planar rotation to tensor
+        containing per frame 3x3 rotation matrices
+        """
         assert (r.ndim == 2)
-        # Technically optional assert, but if this fails data is probably transposed
+        # Technically optional assert, but if this fails data is probably
+        # transposed
         assert (r.shape[1] == 2)
         assert (np.all(np.isfinite(r)))
         norm = np.sqrt((r[:, :2] ** 2).sum(1))
@@ -92,11 +102,13 @@ class Prob3dPose:
     def normalise_data(d2, weights):
         """Normalise data according to height"""
 
-        # the joints with weight set to 0 should not be considered in the normalisation process
+        # the joints with weight set to 0 should not be considered in the
+        # normalisation process
         d2 = d2.reshape(d2.shape[0], -1, 2).transpose(0, 2, 1)
         idx_consider = weights[0, 0].astype(np.bool)
         if np.sum(weights[:, 0].sum(1) >= config.MIN_NUM_JOINTS) == 0:
-            raise Exception('Not enough 2D joints identified to generate 3D pose')
+            raise Exception(
+                'Not enough 2D joints identified to generate 3D pose')
         d2[:, :, idx_consider] = Prob3dPose.centre_all(d2[:, :, idx_consider])
 
         # Height normalisation (2 meters)
@@ -109,8 +121,13 @@ class Prob3dPose:
 
     @staticmethod
     def transform_joints(pose_2d, visible_joints):
-        """Transform the set of joints according to what the probabilistic model expects as input.
-        It returns the new set of joints of each of the people and the set of weights for the joints."""
+        """
+        Transform the set of joints according to what the probabilistic model
+        expects as input.
+
+        It returns the new set of joints of each of the people and the set of
+        weights for the joints.
+        """
 
         _H36M_ORDER = [8, 9, 10, 11, 12, 13, 1, 0, 5, 6, 7, 2, 3, 4]
         _W_POS = [1, 2, 3, 4, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16]
@@ -128,13 +145,19 @@ class Prob3dPose:
 
         # defining weights according to occlusions
         weights = np.zeros((pose_2d.shape[0], 2, config.H36M_NUM_JOINTS))
-        ordered_visibility = np.repeat(visible_joints[:, _H36M_ORDER, np.newaxis], 2, 2).transpose([0, 2, 1])
+        ordered_visibility = np.repeat(
+            visible_joints[:, _H36M_ORDER, np.newaxis], 2, 2
+        ).transpose([0, 2, 1])
         weights[:, :, _W_POS] = ordered_visibility
         return new_pose, weights
 
     def affine_estimate(self, w, depth_reg=0.085, weights=None, scale=10.0,
-                        scale_mean=0.0016 * 1.8 * 1.2, scale_std=1.2 * 0, cap_scale=-0.00129):
-        """Quick switch to allow reconstruction at unknown scale returns a,r and scale"""
+                        scale_mean=0.0016 * 1.8 * 1.2, scale_std=1.2 * 0,
+                        cap_scale=-0.00129):
+        """
+        Quick switch to allow reconstruction at unknown scale returns a,r
+        and scale
+        """
         weights = np.zeros((0, 0, 0)) if weights is None else weights
 
         s = np.empty((self.sigma.shape[0], self.sigma.shape[1] + 4))  # e,y,x,z
@@ -143,18 +166,21 @@ class Prob3dPose:
         s[:, 4:] = self.sigma
         s[:, 4:-1] *= scale
 
-        e2 = np.zeros((self.e.shape[0], self.e.shape[1] + 4, 3, self.e.shape[3]))
+        e2 = np.zeros((self.e.shape[0], self.e.shape[
+                      1] + 4, 3, self.e.shape[3]))
         e2[:, 1, 0] = 1.0
         e2[:, 2, 1] = 1.0
         e2[:, 3, 0] = 1.0
-        # This makes the least_squares problem ill posed, as X,Z are interchangable
+        # This makes the least_squares problem ill posed, as X,Z are
+        # interchangable
         # Hence regularisation above to speed convergence and stop blow-up
         e2[:, 0] = self.mu
         e2[:, 4:] = self.e
         t_m = np.zeros_like(self.mu)
 
         res, a, r = pick_e(w, e2, t_m, self.cam, s, weights=weights,
-                           interval=0.01, depth_reg=depth_reg, scale_prior=scale_mean)
+                           interval=0.01, depth_reg=depth_reg,
+                           scale_prior=scale_mean)
 
         scale = a[:, :, 0]
         reestimate = scale > cap_scale
@@ -164,10 +190,12 @@ class Prob3dPose:
                 ehat = e2[i:i + 1, 1:]
                 mhat = m[i:i + 1]
                 shat = s[i:i + 1, 1:]
-                (res2, a2, r2) = pick_e(w[reestimate[i]], ehat, mhat, self.cam, shat,
-                                        weights=weights[reestimate[i]],
-                                        interval=0.01, depth_reg=depth_reg,
-                                        scale_prior=scale_mean)
+                (res2, a2, r2) = pick_e(
+                    w[reestimate[i]], ehat, mhat, self.cam, shat,
+                    weights=weights[reestimate[i]],
+                    interval=0.01, depth_reg=depth_reg,
+                    scale_prior=scale_mean
+                )
                 res[i:i + 1, reestimate[i]] = res2
                 a[i:i + 1, reestimate[i], 1:] = a2
                 a[i:i + 1, reestimate[i], 0] = cap_scale
@@ -190,8 +218,11 @@ class Prob3dPose:
         """Reconstruct 3D pose given a 2D pose"""
         _SIGMA_SCALING = 5.2
 
-        res, e, a, r, scale = self.affine_estimate(w2, scale=_SIGMA_SCALING, weights=weights,
-                                                depth_reg=0, cap_scale=-0.001, scale_mean=-0.003)
+        res, e, a, r, scale = self.affine_estimate(
+            w2, scale=_SIGMA_SCALING, weights=weights,
+            depth_reg=0, cap_scale=-0.001, scale_mean=-0.003
+        )
+
         remaining_dims = 3 * w2.shape[2] - e.shape[1]
         assert (remaining_dims >= 0)
         llambda = -np.log(self.sigma)
@@ -217,7 +248,8 @@ class Prob3dPose:
 
         if pose_2d.shape[1] != config.H36M_NUM_JOINTS:
             # need to call the linear regressor
-            reg_joints = np.zeros((pose_2d.shape[0], config.H36M_NUM_JOINTS, 2))
+            reg_joints = np.zeros(
+                (pose_2d.shape[0], config.H36M_NUM_JOINTS, 2))
             for oid, singe_pose in enumerate(pose_2d):
                 reg_joints[oid, _J_POS] = singe_pose
 
@@ -225,5 +257,5 @@ class Prob3dPose:
         else:
             norm_pose, _ = Prob3dPose.normalise_data(pose_2d, weights)
 
-        pose_3d = self.create_rec(norm_pose, weights)*_SCALE_3D
+        pose_3d = self.create_rec(norm_pose, weights) * _SCALE_3D
         return pose_3d

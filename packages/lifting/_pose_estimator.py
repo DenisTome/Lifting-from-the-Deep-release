@@ -17,6 +17,7 @@ __all__ = [
     'PoseEstimator'
 ]
 
+
 class PoseEstimatorInterface(ABC):
 
     @abc.abstractmethod

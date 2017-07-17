@@ -33,8 +33,9 @@ def update_cam(cam):
     return new_cam
 
 
-def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res, proj_e, residue, Ps, depth_reg,
-                              scale_prior):
+def estimate_a_and_r_with_res(
+        w, e, s0, camera_r, Lambda, check, a, weights, res, proj_e,
+        residue, Ps, depth_reg, scale_prior):
     """So local optima are a problem in general.
     However:
 
@@ -45,7 +46,8 @@ def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res
     So for each frame, we can do a grid search in r and take the globally
     optimal solution.
 
-    In practice, we just brute force over 100 different estimates of r, and take
+    In practice, we just brute force over 100 different estimates of r, and
+    take
     the best pair (r,a*(r)) where a*(r) is the optimal minimiser of a given r.
 
     Arguments:
@@ -56,7 +58,8 @@ def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res
 
         s0 is the 3d rest shape of form 3*points
 
-        Lambda are the regularisor coefficients on the coefficients of the weights
+        Lambda are the regularisor coefficients on the coefficients of the
+        weights
         typically generated using PPCA
 
         interval is how far round the circle we should check for break points
@@ -85,7 +88,9 @@ def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res
         rot = grot[:2]
         res[:, :points * 2] = w_reshape
         res[:, :points * 2] -= Ps_reshape
-        proj_e[:, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(e.shape[0], 2 * points)
+        proj_e[
+            :, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(
+                e.shape[0], 2 * points)
 
         if Lambda.size != 0:
             proj_e[:, 2 * points:2 * points + basis] = d
@@ -100,11 +105,11 @@ def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res
 
         """
         TODO: PLEASE REVIEW THE FOLLOWING CODE....
-        overwrite_a and overwrite_b ARE UNEXPECTED ARGUMENTS OF  scipy.linalg.lstsq
+        overwrite_a and overwrite_b ARE UNEXPECTED ARGUMENTS OF
+        scipy.linalg.lstsq
         """
-        a[i], residue[i], _, _ = scipy.linalg.lstsq(proj_e.T, res.T, overwrite_a=True, overwrite_b=True)
-
-
+        a[i], residue[i], _, _ = scipy.linalg.lstsq(
+            proj_e.T, res.T, overwrite_a=True, overwrite_b=True)
 
     # find and return best coresponding solution
     best = np.argmin(residue, 0)
@@ -119,8 +124,9 @@ def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res
     return aa, r, retres
 
 
-def estimate_a_and_r_with_res_weights(w, e, s0, camera_r, Lambda, check, a, weights, res, proj_e, residue, Ps,
-                                      depth_reg, scale_prior):
+def estimate_a_and_r_with_res_weights(
+        w, e, s0, camera_r, Lambda, check, a, weights, res, proj_e,
+        residue, Ps, depth_reg, scale_prior):
     """So local optima are a problem in general.
     However:
 
@@ -131,7 +137,8 @@ def estimate_a_and_r_with_res_weights(w, e, s0, camera_r, Lambda, check, a, weig
     So for each frame, we can do a grid search in r and take the globally
     optimal solution.
 
-    In practice, we just brute force over 100 different estimates of r, and take
+    In practice, we just brute force over 100 different estimates of r, and
+    take
     the best pair (r,a*(r)) where a*(r) is the optimal minimiser of a given r.
 
     Arguments:
@@ -142,7 +149,8 @@ def estimate_a_and_r_with_res_weights(w, e, s0, camera_r, Lambda, check, a, weig
 
         s0 is the 3d rest shape of form 3*points
 
-        Lambda are the regularisor coefficients on the coefficients of the weights
+        Lambda are the regularisor coefficients on the coefficients of the
+        weights
         typically generated using PPCA
 
         interval is how far round the circle we should check for break points
@@ -169,10 +177,12 @@ def estimate_a_and_r_with_res_weights(w, e, s0, camera_r, Lambda, check, a, weig
         r[1] = np.cos(c)
         grot = camera_r.dot(upgrade_r(r).T)
         rot = grot[:2]
-        rot.dot(s0, Ps) # TODO: remove?
+        rot.dot(s0, Ps)  # TODO: remove?
         res[:, :points * 2] = w_reshape
         res[:, :points * 2] -= Ps_reshape
-        proj_e[:, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(e.shape[0], 2 * points)
+        proj_e[
+            :, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(
+                e.shape[0], 2 * points)
 
         if Lambda.size != 0:
             proj_e[:, 2 * points:2 * points + basis] = d
@@ -188,7 +198,8 @@ def estimate_a_and_r_with_res_weights(w, e, s0, camera_r, Lambda, check, a, weig
         for j in xrange(frames):
             p_copy[:] = proj_e
             p_copy[:, :points * 2] *= weights[j]
-            a[i, :, j], comp_residual, _, _ = np.linalg.lstsq(p_copy.T, res[j].T)
+            a[i, :, j], comp_residual, _, _ = np.linalg.lstsq(
+                p_copy.T, res[j].T)
             if not comp_residual:
                 # equations are over-determined
                 residue[i, j] = 1e-5
@@ -212,7 +223,8 @@ def pick_e(w, e, s0, camera_r=None, Lambda=None,
         Returns best chart index and its a and r coefficients
         Returns assignment, and a and r coefficents"""
 
-    camera_r = np.asarray([[1, 0, 0], [0, 0, -1], [0, 1, 0]]) if camera_r is None else camera_r
+    camera_r = np.asarray([[1, 0, 0], [0, 0, -1], [0, 1, 0]]
+                          ) if camera_r is None else camera_r
     Lambda = np.ones((0, 0)) if Lambda is None else Lambda
     weights = np.ones((0, 0, 0)) if weights is None else weights
 
@@ -239,32 +251,32 @@ def pick_e(w, e, s0, camera_r=None, Lambda=None,
     if weights.size == 0:
         for i in xrange(charts):
             if Lambda.size != 0:
-                a[i], r[i], score[i] = estimate_a_and_r_with_res(w, e[i],
-                                                                 s0[i], camera_r, Lambda[i],
-                                                                 check, cache_a, weights,
-                                                                 res, proj_e, residue, Ps,
-                                                                 depth_reg, scale_prior)
+                a[i], r[i], score[i] = estimate_a_and_r_with_res(
+                    w, e[i], s0[i], camera_r,
+                    Lambda[i], check, cache_a, weights,
+                    res, proj_e, residue, Ps,
+                    depth_reg, scale_prior)
             else:
-                a[i], r[i], score[i] = estimate_a_and_r_with_res(w, e[i],
-                                                                 s0[i], camera_r, Lambda,
-                                                                 check, cache_a, weights,
-                                                                 res, proj_e, residue, Ps,
-                                                                 depth_reg, scale_prior)
+                a[i], r[i], score[i] = estimate_a_and_r_with_res(
+                    w, e[i], s0[i], camera_r, Lambda,
+                    check, cache_a, weights,
+                    res, proj_e, residue, Ps,
+                    depth_reg, scale_prior)
     else:
         w2 = weights.reshape(weights.shape[0], -1)
         for i in xrange(charts):
             if Lambda.size != 0:
-                a[i], r[i], score[i] = estimate_a_and_r_with_res_weights(w, e[i],
-                                                                         s0[i], camera_r, Lambda[i],
-                                                                         check, cache_a, w2,
-                                                                         res, proj_e, residue, Ps,
-                                                                         depth_reg, scale_prior)
+                a[i], r[i], score[i] = estimate_a_and_r_with_res_weights(
+                    w, e[i], s0[i], camera_r,
+                    Lambda[i], check, cache_a, w2,
+                    res, proj_e, residue, Ps,
+                    depth_reg, scale_prior)
             else:
-                a[i], r[i], score[i] = estimate_a_and_r_with_res_weights(w, e[i],
-                                                                         s0[i], camera_r, Lambda,
-                                                                         check, cache_a, w2,
-                                                                         res, proj_e, residue, Ps,
-                                                                         depth_reg, scale_prior)
+                a[i], r[i], score[i] = estimate_a_and_r_with_res_weights(
+                    w, e[i], s0[i], camera_r, Lambda,
+                    check, cache_a, w2,
+                    res, proj_e, residue, Ps,
+                    depth_reg, scale_prior)
 
     remaining_dims = 3 * w.shape[2] - e.shape[1]
     assert (np.all(score > 0))

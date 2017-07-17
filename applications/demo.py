@@ -23,6 +23,7 @@ SAVED_SESSIONS_DIR = PROJECT_PATH + '/data/saved_sessions'
 SESSION_PATH = SAVED_SESSIONS_DIR + '/init_session/init'
 PROB_MODEL_PATH = SAVED_SESSIONS_DIR + '/prob_model/prob_model_params.mat'
 
+
 def main():
     image_file_path = IMAGE_FILE_PATH
     image = cv2.imread(image_file_path)
