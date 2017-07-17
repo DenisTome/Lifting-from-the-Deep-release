@@ -26,10 +26,10 @@ def main():
     image_size = image.shape
     session_dir = dirname(realpath(__file__))
     session_path = realpath(session_dir + '/../data/saved_sessions/init_session/init')
-    print(session_dir)
-    print(session_path)
-    
-    pose_estimator = PoseEstimator(image_size, session_path)
+    prob_model_path = realpath(session_dir + '/../data/saved_sessions/prob_model/prob_model_params.mat')
+
+
+    pose_estimator = PoseEstimator(image_size, session_path, prob_model_path)
 
     # load model and run evaluation on image
     pose_estimator.initialise()
