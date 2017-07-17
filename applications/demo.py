@@ -25,7 +25,7 @@ PROB_MODEL_PATH = SAVED_SESSIONS_DIR + '/prob_model/prob_model_params.mat'
 
 
 def main():
-    image_file_path = IMAGE_FILE_PATH
+    image_file_path = IMAGE_FILE_PATH    # why ??
     image = cv2.imread(image_file_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # conversion to rgb
 
