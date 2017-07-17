@@ -15,7 +15,7 @@ __all__ = ['Prob3dPose']
 
 class Prob3dPose:
 
-    def __init__(self, prob_model_path, cam_matrix=[]):
+    def __init__(self, prob_model_path):
         model_param = sio.loadmat(prob_model_path)
         self.mu = np.reshape(model_param['mu'], (model_param['mu'].shape[0], 3, -1))
         self.e = np.reshape(model_param['e'], (model_param['e'].shape[0], model_param['e'].shape[1], 3, -1))
