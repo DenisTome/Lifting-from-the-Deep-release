@@ -49,9 +49,9 @@ def plot_pose(pose):
         [15, 16]]
 
     def joint_color(j):
-        '''
+        """
         TODO: 'j' shadows name 'j' from outer scope
-        '''
+        """
 
         colors = [(0, 0, 0), (255, 0, 255), (0, 0, 255),
                   (0, 255, 255), (255, 0, 0), (0, 255, 0)]
