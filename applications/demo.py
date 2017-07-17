@@ -16,20 +16,22 @@ import cv2
 import matplotlib.pyplot as plt
 from os.path import dirname, realpath
 
+DIR_PATH = dirname(realpath(__file__))
+PROJECT_PATH = realpath(DIR_PATH + '/..')
+IMAGE_FILE_PATH = PROJECT_PATH + '/data/images/test_image.png'
+SAVED_SESSIONS_DIR = PROJECT_PATH + '/data/saved_sessions'
+SESSION_PATH = SAVED_SESSIONS_DIR + '/init_session/init'
+PROB_MODEL_PATH = SAVED_SESSIONS_DIR + '/prob_model/prob_model_params.mat'
 
 def main():
-    image_file_name = realpath('../data/images/test_image.png')
-    image = cv2.imread(image_file_name)
+    image_file_path = IMAGE_FILE_PATH
+    image = cv2.imread(image_file_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # conversion to rgb
 
     # create pose estimator
     image_size = image.shape
-    session_dir = dirname(realpath(__file__))
-    session_path = realpath(session_dir + '/../data/saved_sessions/init_session/init')
-    prob_model_path = realpath(session_dir + '/../data/saved_sessions/prob_model/prob_model_params.mat')
 
-
-    pose_estimator = PoseEstimator(image_size, session_path, prob_model_path)
+    pose_estimator = PoseEstimator(image_size, SESSION_PATH, PROB_MODEL_PATH)
 
     # load model and run evaluation on image
     pose_estimator.initialise()
