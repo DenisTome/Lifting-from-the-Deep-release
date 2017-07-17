@@ -97,7 +97,15 @@ def estimate_a_and_r_with_res(w, e, s0, camera_r, Lambda, check, a, weights, res
                                                depth_reg) * grot[2]).dot(e)
             # we let the person change scale
             res[:, 2 * points] = scale_prior
+
+        """
+        TODO: PLEASE REVIEW THE FOLLOWING CODE....
+        overwrite_a and overwrite_b ARE UNEXPECTED ARGUMENTS OF  scipy.linalg.lstsq
+        """
         a[i], residue[i], _, _ = scipy.linalg.lstsq(proj_e.T, res.T, overwrite_a=True, overwrite_b=True)
+
+
+
     # find and return best coresponding solution
     best = np.argmin(residue, 0)
     assert (best.shape[0] == frames)
