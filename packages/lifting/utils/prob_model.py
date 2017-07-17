@@ -7,15 +7,15 @@ Created on Apr 21 13:53 2017
 import os
 import scipy.io as sio
 import numpy as np
-from upright_fast import pick_e
-import config
+from lifting.utils.upright_fast import pick_e
+from lifting.utils import config
 
 
 class Prob3dPose:
 
     def __init__(self, cam_matrix=[]):
         file_path = os.path.dirname(__file__)
-        model_param = sio.loadmat(file_path + '/../saved_sessions/prob_model/prob_model_params.mat')
+        model_param = sio.loadmat(file_path + '/../../../data/saved_sessions/prob_model/prob_model_params.mat')
         self.mu = np.reshape(model_param['mu'], (model_param['mu'].shape[0], 3, -1))
         self.e = np.reshape(model_param['e'], (model_param['e'].shape[0], model_param['e'].shape[1], 3, -1))
         self.sigma = model_param['sigma']

@@ -7,7 +7,7 @@ Created on Mar 23 15:29 2017
 import os
 import json
 import numpy as np
-import config
+from lifting.utils import config
 import cv2
 import skimage.io
 import skimage.transform
