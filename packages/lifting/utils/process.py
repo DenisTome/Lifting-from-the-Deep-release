@@ -16,6 +16,20 @@ import scipy.ndimage.filters as filters
 from itertools import compress
 from scipy.stats import multivariate_normal
 
+__all__ = [
+    'detect_objects_heatmap',
+    'detect_objects_heatmap',
+    'gaussian_kernel',
+    'gaussian_heatmap',
+    'prepare_input_posenet',
+    'detect_parts_heatmaps',
+    'import_json',
+    'generate_labels',
+    'generate_center_map',
+    'rescale',
+    'crop_image'
+]
+
 
 def detect_objects_heatmap(heatmap):
     data = 256 * heatmap

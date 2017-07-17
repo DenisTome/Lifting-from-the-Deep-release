@@ -10,6 +10,8 @@ import numpy as np
 from lifting.utils.upright_fast import pick_e
 from lifting.utils import config
 
+__all__ = ['Prob3dPose']
+
 
 class Prob3dPose:
 

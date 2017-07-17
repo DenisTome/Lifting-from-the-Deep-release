@@ -10,6 +10,11 @@ from config import JOINT_DRAW_SIZE
 from config import LIMB_DRAW_SIZE
 import matplotlib.pyplot as plt
 
+__all__ = [
+    'draw_limbs',
+    'plot_pose'
+]
+
 
 def draw_limbs(image, pose_2d, visible):
     """Draw the 2D pose without the occluded/not visible joints."""

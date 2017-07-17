@@ -1,6 +1,11 @@
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
+__all__ = [
+    'inference_person',
+    'inference_pose'
+]
+
 
 def inference_person(image):
   with tf.variable_scope('PersonNet'):

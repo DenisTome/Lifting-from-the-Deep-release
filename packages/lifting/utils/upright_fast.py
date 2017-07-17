@@ -7,6 +7,14 @@ Created on May 22 17:10 2017
 import numpy as np
 import scipy
 
+__all__ = [
+    'upgrade_r',
+    'update_cam',
+    'estimate_a_and_r_with_res',
+    'estimate_a_and_r_with_res_weights',
+    'pick_e'
+]
+
 
 def upgrade_r(r):
     """Upgrades complex parameterisation of planar rotation to tensor containing

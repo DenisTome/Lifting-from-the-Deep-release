@@ -12,6 +12,10 @@ import tensorflow as tf
 import abc
 ABC = abc.ABCMeta('ABC', (object,), {})
 
+__all__ = [
+    'PoseEstimatorInterface',
+    'PoseEstimator'
+]
 
 class PoseEstimatorInterface(ABC):
 
