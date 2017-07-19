@@ -12,6 +12,11 @@ import tensorflow as tf
 import abc
 ABC = abc.ABCMeta('ABC', (object,), {})
 
+__all__ = [
+    'PoseEstimatorInterface',
+    'PoseEstimator'
+]
+
 
 class PoseEstimatorInterface(ABC):
 
@@ -30,13 +35,13 @@ class PoseEstimatorInterface(ABC):
 
 class PoseEstimator(PoseEstimatorInterface):
 
-    def __init__(self, image_size, session_path):
+    def __init__(self, image_size, session_path, prob_model_path):
         """Initialising the graph in tensorflow.
         INPUT:
             image_size: Size of the image in the format (w x h x 3)"""
 
         self.session = None
-        self.poseLifting = utils.Prob3dPose()
+        self.poseLifting = utils.Prob3dPose(prob_model_path)
         self.sess = -1
         self.orig_img_size = np.array(image_size)
         self.scale = utils.config.INPUT_SIZE / (self.orig_img_size[0] * 1.0)
@@ -56,6 +61,9 @@ class PoseEstimator(PoseEstimatorInterface):
         OUTPUT:
             sess: tensorflow session"""
 
+        '''
+        TODO: _N shadows built-in name '_N'
+        '''
         _N = 16
 
         tf.reset_default_graph()
