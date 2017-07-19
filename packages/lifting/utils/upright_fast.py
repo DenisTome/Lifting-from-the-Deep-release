@@ -55,8 +55,8 @@ def estimate_a_and_r_with_res(
     optimal solution.
 
     In practice, we just brute force over 100 different estimates of r, and
-    take
-    the best pair (r,a*(r)) where a*(r) is the optimal minimiser of a given r.
+    take the best pair (r,a*(r)) where a*(r) is the optimal minimiser of a
+    given r.
 
     Arguments:
 
@@ -96,9 +96,8 @@ def estimate_a_and_r_with_res(
         rot = grot[:2]
         res[:, :points * 2] = w_reshape
         res[:, :points * 2] -= Ps_reshape
-        proj_e[
-            :, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(
-                e.shape[0], 2 * points)
+        proj_e[:, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(
+            e.shape[0], 2 * points)
 
         if Lambda.size != 0:
             """
@@ -196,9 +195,8 @@ def estimate_a_and_r_with_res_weights(
         rot.dot(s0, Ps)  # TODO: remove?
         res[:, :points * 2] = w_reshape
         res[:, :points * 2] -= Ps_reshape
-        proj_e[
-            :, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(
-                e.shape[0], 2 * points)
+        proj_e[:, :2 * points] = rot.dot(e).transpose(1, 0, 2).reshape(
+            e.shape[0], 2 * points)
 
         if Lambda.size != 0:
             """
