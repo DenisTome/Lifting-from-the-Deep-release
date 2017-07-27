@@ -5,6 +5,22 @@ Created on Mar 23 11:57 2017
 @author: Denis Tome'
 """
 
+__all__ = [
+    'VISIBLE_PART',
+    'MIN_NUM_JOINTS',
+    'CENTER_TR',
+    'SIGMA',
+    'STRIDE',
+    'SIGMA_CENTER',
+    'INPUT_SIZE',
+    'OUTPUT_SIZE',
+    'NUM_JOINTS',
+    'NUM_OUTPUT',
+    'H36M_NUM_JOINTS',
+    'JOINT_DRAW_SIZE',
+    'LIMB_DRAW_SIZE'
+]
+
 # threshold
 VISIBLE_PART = 1e-3
 MIN_NUM_JOINTS = 5
