@@ -67,8 +67,7 @@ def estimate_a_and_r_with_res(
         s0 is the 3d rest shape of form 3*points
 
         Lambda are the regularisor coefficients on the coefficients of the
-        weights
-        typically generated using PPCA
+        weights typically generated using PPCA
 
         interval is how far round the circle we should check for break points
         we check every interval*2*pi radians
@@ -84,14 +83,11 @@ def estimate_a_and_r_with_res(
     r = np.empty(2)
     Ps_reshape = Ps.reshape(2 * points)
     w_reshape = w.reshape((frames, points * 2))
-    if Lambda.size != 0:
-        d = np.diag(Lambda[:Lambda.shape[0] - 1])
 
     for i in xrange(check.size):
         c = check[i]
         r[0] = np.cos(c)
         r[1] = np.sin(c)
-        # grot = update_cam(camera_r).dot(upgrade_r2(r))
         grot = camera_r.dot(upgrade_r(r))
         rot = grot[:2]
         res[:, :points * 2] = w_reshape
@@ -100,10 +96,7 @@ def estimate_a_and_r_with_res(
             e.shape[0], 2 * points)
 
         if Lambda.size != 0:
-            """
-            TODO: Variable d might be reference before assignment
-            """
-            proj_e[:, 2 * points:2 * points + basis] = d
+            proj_e[:, 2 * points:2 * points + basis] = np.diag(Lambda[:Lambda.shape[0] - 1])
             res[:, 2 * points:].fill(0)
             res[:, :points * 2] *= Lambda[Lambda.shape[0] - 1]
             proj_e[:, :points * 2] *= Lambda[Lambda.shape[0] - 1]
@@ -183,8 +176,6 @@ def estimate_a_and_r_with_res_weights(
     Ps_reshape = Ps.reshape(2 * points)
     w_reshape = w.reshape((frames, points * 2))
     p_copy = np.empty_like(proj_e)
-    if Lambda.size != 0:
-        d = np.diag(Lambda[:Lambda.shape[0] - 1])
 
     for i in xrange(check.size):
         c = check[i]
@@ -199,16 +190,12 @@ def estimate_a_and_r_with_res_weights(
             e.shape[0], 2 * points)
 
         if Lambda.size != 0:
-            """
-            TODO: Variable d might be reference before assignment
-            """
-            proj_e[:, 2 * points:2 * points + basis] = d
+            proj_e[:, 2 * points:2 * points + basis] = np.diag(Lambda[:Lambda.shape[0] - 1])
             res[:, 2 * points:].fill(0)
             res[:, :points * 2] *= Lambda[Lambda.shape[0] - 1]
             proj_e[:, :points * 2] *= Lambda[Lambda.shape[0] - 1]
             proj_e[:, 2 * points + basis:] = ((Lambda[Lambda.shape[0] - 1] *
                                                depth_reg) * grot[2]).dot(e)
-            # res[:, 2 * points:].fill(0)
             res[:, 2 * points] = scale_prior
         if weights.size != 0:
             res[:, :points * 2] *= weights
@@ -302,9 +289,5 @@ def pick_e(w, e, s0, camera_r=None, Lambda=None,
     l = Lambda.copy()
     l[Lambda == 0] = 1
     llambda = -np.log(l)
-    """
-    TODO: lgdet is assigned but not used
-    """
-    lgdet = np.sum(llambda[:, :-1], 1) + llambda[:, -1] * remaining_dims
     score /= 2
     return score, a, r
