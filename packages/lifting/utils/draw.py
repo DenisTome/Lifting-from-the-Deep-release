@@ -8,7 +8,9 @@ import cv2
 import numpy as np
 from config import JOINT_DRAW_SIZE
 from config import LIMB_DRAW_SIZE
+from config import NORMALISATION_COEFFICIENT
 import matplotlib.pyplot as plt
+import math
 
 __all__ = [
     'draw_limbs',
@@ -27,16 +29,18 @@ def draw_limbs(image, pose_2d, visible):
     _LIMBS = np.array([0, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 9,
                        9, 10, 11, 12, 12, 13]).reshape((-1, 2))
 
+    _NORMALISATION_FACTOR = int(math.floor(math.sqrt(image.shape[0] * image.shape[1] / NORMALISATION_COEFFICIENT)))
+
     for oid in xrange(pose_2d.shape[0]):
         for lid, (p0, p1) in enumerate(_LIMBS):
             if not (visible[oid][p0] and visible[oid][p1]):
                 continue
             y0, x0 = pose_2d[oid][p0]
             y1, x1 = pose_2d[oid][p1]
-            cv2.circle(image, (x0, y0), JOINT_DRAW_SIZE, _COLORS[lid], -1)
-            cv2.circle(image, (x1, y1), JOINT_DRAW_SIZE, _COLORS[lid], -1)
+            cv2.circle(image, (x0, y0), JOINT_DRAW_SIZE *_NORMALISATION_FACTOR , _COLORS[lid], -1)
+            cv2.circle(image, (x1, y1), JOINT_DRAW_SIZE*_NORMALISATION_FACTOR , _COLORS[lid], -1)
             cv2.line(image, (x0, y0), (x1, y1),
-                     _COLORS[lid], LIMB_DRAW_SIZE, 16)
+                     _COLORS[lid], LIMB_DRAW_SIZE*_NORMALISATION_FACTOR , 16)
 
 
 def plot_pose(pose):
@@ -86,3 +90,7 @@ def plot_pose(pose):
     ax.set_xlim3d(smallest, largest)
     ax.set_ylim3d(smallest, largest)
     ax.set_zlim3d(smallest, largest)
+
+    return fig
+
+
