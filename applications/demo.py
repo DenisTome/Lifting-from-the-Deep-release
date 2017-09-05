@@ -33,7 +33,7 @@ def main():
 
     pose_estimator = PoseEstimator(image_size, SESSION_PATH, PROB_MODEL_PATH)
 
-    # load model and run evaluation on image
+    # load model
     pose_estimator.initialise()
 
     # estimation
