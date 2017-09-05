@@ -5,7 +5,7 @@ Denis Tome', Chris Russell, Lourdes Agapito
 
 This project is licensed under the terms of the GNU GPLv3 license. By using the software, you are agreeing to the terms of the license agreement ([link](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/LICENSE)).
 
-![Teaser?](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/Data/images/teaser-github.png)
+![Teaser?](https://github.com/DenisTome/Lifting-from-the-Deep-release/blob/master/Data/Lifting-from-the-Deep/images/teaser-github.png)
 ## Abstract
 
 We propose a unified formulation for the problem of 3D human pose estimation from a single raw RGB image
