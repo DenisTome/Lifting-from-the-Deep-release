@@ -111,6 +111,10 @@ class PoseEstimator(PoseEstimatorInterface):
             format (num_ppl x 3 x num_joints)
         """
 
+        pose_2d = np.array([])
+        pose_3d = np.array([])
+        visibility = np.array([])
+
         sess = self.session
 
         image = cv2.resize(image, (0, 0), fx=self.scale,
@@ -122,27 +126,29 @@ class PoseEstimator(PoseEstimatorInterface):
 
         hmap_person = np.squeeze(hmap_person)
         centers = utils.detect_objects_heatmap(hmap_person)
-        b_pose_image, b_pose_cmap = utils.prepare_input_posenet(
-            b_image[0], centers,
-            [utils.config.INPUT_SIZE, image.shape[1]],
-            [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
+        
+        if (centers.size != 0):
+            b_pose_image, b_pose_cmap = utils.prepare_input_posenet(
+                b_image[0], centers,
+                [utils.config.INPUT_SIZE, image.shape[1]],
+                [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
 
-        feed_dict = {
-            self.pose_image_in: b_pose_image,
-            self.pose_centermap_in: b_pose_cmap
-        }
-        _hmap_pose = sess.run(self.heatmap_pose, feed_dict)
+            feed_dict = {
+                self.pose_image_in: b_pose_image,
+                self.pose_centermap_in: b_pose_cmap
+            }
+            _hmap_pose = sess.run(self.heatmap_pose, feed_dict)
 
-        # Estimate 2D poses
-        estimated_2d_pose, visibility = utils.detect_parts_heatmaps(
-            _hmap_pose, centers,
-            [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
+            # Estimate 2D poses
+            estimated_2d_pose, visibility = utils.detect_parts_heatmaps(
+                _hmap_pose, centers,
+                [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
 
-        # Estimate 3D poses
-        transformed_pose2d, weights = self.poseLifting.transform_joints(
-            estimated_2d_pose.copy(), visibility)
-        pose_3d = self.poseLifting.compute_3d(transformed_pose2d, weights)
-        pose_2d = np.round(estimated_2d_pose / self.scale).astype(np.int32)
+            # Estimate 3D poses
+            transformed_pose2d, weights = self.poseLifting.transform_joints(
+                estimated_2d_pose.copy(), visibility)
+            pose_3d = self.poseLifting.compute_3d(transformed_pose2d, weights)
+            pose_2d = np.round(estimated_2d_pose / self.scale).astype(np.int32)
 
         return pose_2d, visibility, pose_3d
 
