@@ -185,7 +185,7 @@ class Prob3dPose:
         scale = a[:, :, 0]
         reestimate = scale > cap_scale
         m = self.mu * cap_scale
-        for i in xrange(scale.shape[0]):
+        for i in range(scale.shape[0]):
             if reestimate[i].sum() > 0:
                 ehat = e2[i:i + 1, 1:]
                 mhat = m[i:i + 1]
