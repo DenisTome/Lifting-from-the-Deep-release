@@ -1,2 +1,2 @@
 from ._pose_estimator import *
-import utils
+from . import utils
