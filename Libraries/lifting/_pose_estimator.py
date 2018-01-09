@@ -61,12 +61,6 @@ class PoseEstimator(PoseEstimatorInterface):
         OUTPUT:
             sess: tensorflow session"""
 
-        '''
-        TODO: _N shadows built-in name '_N'
-        '''
-        # TODO: change this to 1
-        _N = 16
-
         tf.reset_default_graph()
         with tf.variable_scope('CPM'):
             # placeholders for person network
@@ -81,18 +75,15 @@ class PoseEstimator(PoseEstimatorInterface):
             # placeholders for pose network
             self.pose_image_in = tf.placeholder(
                 tf.float32,
-                [_N, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 3])
+                [utils.config.BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 3])
 
             self.pose_centermap_in = tf.placeholder(
                 tf.float32,
-                [_N, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
+                [utils.config.BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
 
             self.pred_2d_pose, self.likelihoods = utils.inference_pose_reduced(
                 self.pose_image_in, self.pose_centermap_in,
                 utils.config.INPUT_SIZE)
-
-            # self.heatmap_pose = utils.inference_pose(
-            #     self.pose_image_in, self.pose_centermap_in)
 
         sess = tf.Session()
         sess.run(tf.global_variables_initializer())
@@ -132,22 +123,19 @@ class PoseEstimator(PoseEstimatorInterface):
         hmap_person = np.squeeze(hmap_person)
         centers = utils.detect_objects_heatmap(hmap_person)
 
-        if (centers.size != 0):
+        if centers.size != 0:
             b_pose_image, b_pose_cmap = utils.prepare_input_posenet(
                 b_image[0], centers,
                 [utils.config.INPUT_SIZE, image.shape[1]],
-                [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
+                [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE],
+                batch_size=utils.config.BATCH_SIZE)
 
             feed_dict = {
                 self.pose_image_in: b_pose_image,
                 self.pose_centermap_in: b_pose_cmap
             }
-            # _hmap_pose = sess.run(self.pred_2d_pose, feed_dict)
 
             # #Estimate 2D poses
-            # estimated_2d_pose, visibility = utils.detect_parts_heatmaps(
-            #     _hmap_pose, centers,
-            #     [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
             pred_2d_pose, pred_likelihood = sess.run([self.pred_2d_pose,
                                                       self.likelihoods],
                                                      feed_dict)

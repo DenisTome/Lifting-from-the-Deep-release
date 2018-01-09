@@ -18,7 +18,7 @@ __all__ = [
     'NUM_OUTPUT',
     'H36M_NUM_JOINTS',
     'JOINT_DRAW_SIZE',
-    'LIMB_DRAW_SIZE'
+    'LIMB_DRAW_SIZE',
 ]
 
 # threshold
@@ -40,3 +40,6 @@ H36M_NUM_JOINTS = 17
 JOINT_DRAW_SIZE = 3
 LIMB_DRAW_SIZE = 2
 NORMALISATION_COEFFICIENT = 1280*720
+
+# test time options
+BATCH_SIZE = 1
