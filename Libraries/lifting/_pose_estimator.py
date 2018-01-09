@@ -10,6 +10,7 @@ import numpy as np
 import tensorflow as tf
 
 import abc
+
 ABC = abc.ABCMeta('ABC', (object,), {})
 
 __all__ = [
@@ -19,7 +20,6 @@ __all__ = [
 
 
 class PoseEstimatorInterface(ABC):
-
     @abc.abstractmethod
     def initialise(self):
         pass
@@ -34,7 +34,6 @@ class PoseEstimatorInterface(ABC):
 
 
 class PoseEstimator(PoseEstimatorInterface):
-
     def __init__(self, image_size, session_path, prob_model_path):
         """Initialising the graph in tensorflow.
         INPUT:
@@ -51,7 +50,8 @@ class PoseEstimator(PoseEstimatorInterface):
         self.heatmap_person_large = None
         self.pose_image_in = None
         self.pose_centermap_in = None
-        self.heatmap_pose = None
+        self.pred_2d_pose = None
+        self.likelihoods = None
         self.session_path = session_path
 
     def initialise(self):
@@ -64,6 +64,7 @@ class PoseEstimator(PoseEstimatorInterface):
         '''
         TODO: _N shadows built-in name '_N'
         '''
+        # TODO: change this to 1
         _N = 16
 
         tf.reset_default_graph()
@@ -86,8 +87,12 @@ class PoseEstimator(PoseEstimatorInterface):
                 tf.float32,
                 [_N, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
 
-            self.heatmap_pose = utils.inference_pose(
-                self.pose_image_in, self.pose_centermap_in)
+            self.pred_2d_pose, self.likelihoods = utils.inference_pose_reduced(
+                self.pose_image_in, self.pose_centermap_in,
+                utils.config.INPUT_SIZE)
+
+            # self.heatmap_pose = utils.inference_pose(
+            #     self.pose_image_in, self.pose_centermap_in)
 
         sess = tf.Session()
         sess.run(tf.global_variables_initializer())
@@ -122,11 +127,11 @@ class PoseEstimator(PoseEstimatorInterface):
         b_image = np.array(image[np.newaxis] / 255.0 - 0.5, dtype=np.float32)
 
         hmap_person = sess.run(self.heatmap_person_large, {
-                               self.image_in: b_image})
+            self.image_in: b_image})
 
         hmap_person = np.squeeze(hmap_person)
         centers = utils.detect_objects_heatmap(hmap_person)
-        
+
         if (centers.size != 0):
             b_pose_image, b_pose_cmap = utils.prepare_input_posenet(
                 b_image[0], centers,
@@ -137,12 +142,18 @@ class PoseEstimator(PoseEstimatorInterface):
                 self.pose_image_in: b_pose_image,
                 self.pose_centermap_in: b_pose_cmap
             }
-            _hmap_pose = sess.run(self.heatmap_pose, feed_dict)
+            # _hmap_pose = sess.run(self.pred_2d_pose, feed_dict)
 
-            # Estimate 2D poses
-            estimated_2d_pose, visibility = utils.detect_parts_heatmaps(
-                _hmap_pose, centers,
-                [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
+            # #Estimate 2D poses
+            # estimated_2d_pose, visibility = utils.detect_parts_heatmaps(
+            #     _hmap_pose, centers,
+            #     [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
+            pred_2d_pose, pred_likelihood = sess.run([self.pred_2d_pose,
+                                                      self.likelihoods],
+                                                     feed_dict)
+            estimated_2d_pose, visibility = utils.detect_parts_from_likelihoods(pred_2d_pose,
+                                                                                centers,
+                                                                                pred_likelihood)
 
             # Estimate 3D poses
             transformed_pose2d, weights = self.poseLifting.transform_joints(
