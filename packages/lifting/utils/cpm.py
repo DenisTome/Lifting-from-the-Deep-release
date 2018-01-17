@@ -148,7 +148,42 @@ def inference_person(image):
     return Mconv7_stage4
 
 
-def inference_pose(image, center_map):
+def _argmax_2d(tensor):
+    """
+    Compute argmax on the 2nd and 3d dimensions of the tensor.
+    e.g. given an input tensor of size N x K x K x C, then it computes the (x,y) coordinates for
+    each of the N images and C channels, corresponding to the max for that image and channel.
+    :param tensor: image of size N x K x K x C
+    :return: argmax in the format N x 2 x C (where C corresponds to NUM_JOINTS)
+    """
+    # get size
+    shape = tensor.get_shape().as_list()[1]
+    n_channels = tf.shape(tensor)[-1]
+
+    # process each channel
+    linearised_channel = tf.reshape(tensor, [-1, shape * shape, n_channels])
+    best_channel = tf.argmax(linearised_channel, axis=1)
+
+    idx_y = tf.expand_dims(tf.floordiv(best_channel, shape), axis=1)
+    idx_x = tf.expand_dims(tf.mod(best_channel, shape), axis=1)
+    argmax_channels = tf.concat([idx_x, idx_y], axis=1)
+    return argmax_channels
+
+
+def _process_stage(heat_maps, hm_size):
+    """
+    For each heat-map identify joint position and likelihood
+    :param heat_maps: input heat-maps
+    :param hm_size: size in which to return the coordinates
+    :return: 2d joints (BATCH_SIZE x 14 x 2)
+             likelihood for each joint (BATCH_SIZE x 14)
+    """
+    rescaled = tf.image.resize_images(heat_maps[:, :, :, :-1], [hm_size, hm_size])
+    uncertainty = tf.reduce_max(tf.reduce_mean(rescaled, axis=1), axis=1)
+    return _argmax_2d(rescaled), uncertainty
+
+
+def inference_pose_reduced(image, center_map, hm_size, stage=6):
     with tf.variable_scope('PoseNet'):
         pool_center_lower = layers.avg_pool2d(center_map, 9, 8, padding='SAME')
         conv1_1 = layers.conv2d(
@@ -232,6 +267,9 @@ def inference_pose(image, center_map):
         Mconv6_stage2 = tf.nn.relu(Mconv6_stage2)
         Mconv7_stage2 = layers.conv2d(
             Mconv6_stage2, 15, 1, 1, activation_fn=None, scope='Mconv7_stage2')
+        if stage == 2:
+            return _process_stage(Mconv7_stage2, hm_size)
+
         concat_stage3 = tf.concat(
             [Mconv7_stage2, conv4_7_CPM, pool_center_lower], 3)
         Mconv1_stage3 = layers.conv2d(
@@ -260,6 +298,9 @@ def inference_pose(image, center_map):
         Mconv6_stage3 = tf.nn.relu(Mconv6_stage3)
         Mconv7_stage3 = layers.conv2d(
             Mconv6_stage3, 15, 1, 1, activation_fn=None, scope='Mconv7_stage3')
+        if stage == 3:
+            return _process_stage(Mconv7_stage3, hm_size)
+
         concat_stage4 = tf.concat(
             [Mconv7_stage3, conv4_7_CPM, pool_center_lower], 3)
         Mconv1_stage4 = layers.conv2d(
@@ -288,6 +329,9 @@ def inference_pose(image, center_map):
         Mconv6_stage4 = tf.nn.relu(Mconv6_stage4)
         Mconv7_stage4 = layers.conv2d(
             Mconv6_stage4, 15, 1, 1, activation_fn=None, scope='Mconv7_stage4')
+        if stage == 4:
+            return _process_stage(Mconv7_stage4, hm_size)
+
         concat_stage5 = tf.concat(
             [Mconv7_stage4, conv4_7_CPM, pool_center_lower], 3)
         Mconv1_stage5 = layers.conv2d(
@@ -316,6 +360,9 @@ def inference_pose(image, center_map):
         Mconv6_stage5 = tf.nn.relu(Mconv6_stage5)
         Mconv7_stage5 = layers.conv2d(
             Mconv6_stage5, 15, 1, 1, activation_fn=None, scope='Mconv7_stage5')
+        if stage == 5:
+            return _process_stage(Mconv7_stage5, hm_size)
+
         concat_stage6 = tf.concat(
             [Mconv7_stage5, conv4_7_CPM, pool_center_lower], 3)
         Mconv1_stage6 = layers.conv2d(
@@ -345,4 +392,5 @@ def inference_pose(image, center_map):
         Mconv7_stage6 = layers.conv2d(
             Mconv6_stage6, 15, 1, 1, activation_fn=None,
             scope='Mconv7_stage6')
-    return Mconv7_stage6
+        return _process_stage(Mconv7_stage6, hm_size)
+

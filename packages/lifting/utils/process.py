@@ -23,6 +23,7 @@ __all__ = [
     'gaussian_heatmap',
     'prepare_input_posenet',
     'detect_parts_heatmaps',
+    'detect_parts_from_likelihoods',
     'import_json',
     'generate_labels',
     'generate_center_map',
@@ -119,6 +120,23 @@ def detect_parts_heatmaps(heatmaps, centers, size, num_parts=14):
             parts[oid, pid] = y + yc - size[0] // 2, x + xc - size[1] // 2
             visible[oid, pid] = np.mean(
                 part_hmap[:, :, pid]) > config.VISIBLE_PART
+    return parts, visible
+
+
+def detect_parts_from_likelihoods(poses, centers, likelihoods, num_parts=14):
+    """
+    Given heat-maps find the position of each joint by means of n argmax
+    function
+    """
+    if len(centers) > config.BATCH_SIZE:
+        centers = centers[:config.BATCH_SIZE]
+    parts = np.zeros((len(centers), num_parts, 2), dtype=np.int32)
+    visible = np.zeros((len(centers), num_parts), dtype=bool)
+    for oid, (yc, xc) in enumerate(centers):
+        for pid in range(num_parts):
+            x, y = poses[oid, :, pid]
+            parts[oid, pid] = y + yc - config.INPUT_SIZE // 2, x + xc - config.INPUT_SIZE // 2
+            visible[oid, pid] = likelihoods[oid, pid] > config.VISIBLE_PART
     return parts, visible
 
 
