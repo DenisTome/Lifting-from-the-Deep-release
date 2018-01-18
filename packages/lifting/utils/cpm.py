@@ -183,7 +183,7 @@ def _process_stage(heat_maps, hm_size):
     return _argmax_2d(rescaled), uncertainty
 
 
-def inference_pose_reduced(image, center_map, hm_size, stage=6):
+def inference_pose(image, center_map, hm_size, stage=6):
     with tf.variable_scope('PoseNet'):
         pool_center_lower = layers.avg_pool2d(center_map, 9, 8, padding='SAME')
         conv1_1 = layers.conv2d(

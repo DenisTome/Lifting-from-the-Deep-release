@@ -88,14 +88,15 @@ def gaussian_heatmap(h, w, pos_x, pos_y, sigma_h=1, sigma_w=1, init=None):
     return hmap
 
 
-def prepare_input_posenet(image, objects, size_person, size, sigma=25,
-                          max_num_objects=16, border=400):
-    result = np.zeros((max_num_objects, size[0], size[1], 4))
+def prepare_input_posenet(image, objects, size_person, size,
+                          batch_size, sigma=25, border=400):
+    result = np.zeros((batch_size, size[0], size[1], 4))
     padded_image = np.zeros(
         (1, size_person[0] + border, size_person[1] + border, 4))
     padded_image[0, border // 2:-border // 2,
                  border // 2:-border // 2, :3] = image
-    assert len(objects) < max_num_objects
+    if objects.shape[0] > batch_size:
+        objects = objects[:batch_size]
     for oid, (yc, xc) in enumerate(objects):
         dh, dw = size[0] // 2, size[1] // 2
         y0, x0, y1, x1 = np.array(

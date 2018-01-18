@@ -8,6 +8,7 @@ import cv2
 import utils
 import numpy as np
 import tensorflow as tf
+from utils.config import BATCH_SIZE
 
 import abc
 ABC = abc.ABCMeta('ABC', (object,), {})
@@ -62,11 +63,6 @@ class PoseEstimator(PoseEstimatorInterface):
         OUTPUT:
             sess: tensorflow session"""
 
-        '''
-        TODO: _N shadows built-in name '_N'
-        '''
-        _N = 16
-
         tf.reset_default_graph()
         with tf.variable_scope('CPM'):
             # placeholders for person network
@@ -81,13 +77,13 @@ class PoseEstimator(PoseEstimatorInterface):
             # placeholders for pose network
             self.pose_image_in = tf.placeholder(
                 tf.float32,
-                [_N, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 3])
+                [BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 3])
 
             self.pose_centermap_in = tf.placeholder(
                 tf.float32,
-                [_N, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
+                [BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
 
-            self.pred_2d_pose, self.likelihoods = utils.inference_pose_reduced(
+            self.pred_2d_pose, self.likelihoods = utils.inference_pose(
                 self.pose_image_in, self.pose_centermap_in,
                 utils.config.INPUT_SIZE)
 
@@ -127,13 +123,13 @@ class PoseEstimator(PoseEstimatorInterface):
         b_pose_image, b_pose_cmap = utils.prepare_input_posenet(
             b_image[0], centers,
             [utils.config.INPUT_SIZE, image.shape[1]],
-            [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE])
+            [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE],
+            batch_size=BATCH_SIZE)
 
         feed_dict = {
             self.pose_image_in: b_pose_image,
             self.pose_centermap_in: b_pose_cmap
         }
-        _hmap_pose = sess.run(self.heatmap_pose, feed_dict)
 
         # Estimate 2D poses
         pred_2d_pose, pred_likelihood = sess.run([self.pred_2d_pose,
