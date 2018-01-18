@@ -6,9 +6,9 @@ Created on Mar 23 15:04 2017
 """
 import cv2
 import numpy as np
-from config import JOINT_DRAW_SIZE
-from config import LIMB_DRAW_SIZE
-from config import NORMALISATION_COEFFICIENT
+from .config import JOINT_DRAW_SIZE
+from .config import LIMB_DRAW_SIZE
+from .config import NORMALISATION_COEFFICIENT
 import matplotlib.pyplot as plt
 import math
 
@@ -31,7 +31,7 @@ def draw_limbs(image, pose_2d, visible):
 
     _NORMALISATION_FACTOR = int(math.floor(math.sqrt(image.shape[0] * image.shape[1] / NORMALISATION_COEFFICIENT)))
 
-    for oid in xrange(pose_2d.shape[0]):
+    for oid in range(pose_2d.shape[0]):
         for lid, (p0, p1) in enumerate(_LIMBS):
             if not (visible[oid][p0] and visible[oid][p1]):
                 continue

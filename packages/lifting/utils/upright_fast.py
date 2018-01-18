@@ -84,7 +84,7 @@ def estimate_a_and_r_with_res(
     Ps_reshape = Ps.reshape(2 * points)
     w_reshape = w.reshape((frames, points * 2))
 
-    for i in xrange(check.size):
+    for i in range(check.size):
         c = check[i]
         r[0] = np.cos(c)
         r[1] = np.sin(c)
@@ -177,7 +177,7 @@ def estimate_a_and_r_with_res_weights(
     w_reshape = w.reshape((frames, points * 2))
     p_copy = np.empty_like(proj_e)
 
-    for i in xrange(check.size):
+    for i in range(check.size):
         c = check[i]
         r[0] = np.sin(c)
         r[1] = np.cos(c)
@@ -199,7 +199,7 @@ def estimate_a_and_r_with_res_weights(
             res[:, 2 * points] = scale_prior
         if weights.size != 0:
             res[:, :points * 2] *= weights
-        for j in xrange(frames):
+        for j in range(frames):
             p_copy[:] = proj_e
             p_copy[:, :points * 2] *= weights[j]
             a[i, :, j], comp_residual, _, _ = np.linalg.lstsq(
@@ -253,7 +253,7 @@ def pick_e(w, e, s0, camera_r=None, Lambda=None,
     Ps = np.empty((2, points))
 
     if weights.size == 0:
-        for i in xrange(charts):
+        for i in range(charts):
             if Lambda.size != 0:
                 a[i], r[i], score[i] = estimate_a_and_r_with_res(
                     w, e[i], s0[i], camera_r,
@@ -268,7 +268,7 @@ def pick_e(w, e, s0, camera_r=None, Lambda=None,
                     depth_reg, scale_prior)
     else:
         w2 = weights.reshape(weights.shape[0], -1)
-        for i in xrange(charts):
+        for i in range(charts):
             if Lambda.size != 0:
                 a[i], r[i], score[i] = estimate_a_and_r_with_res_weights(
                     w, e[i], s0[i], camera_r,

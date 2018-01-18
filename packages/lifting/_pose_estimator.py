@@ -4,8 +4,8 @@ Created on Jul 13 16:20 2017
 
 @author: Denis Tome'
 """
+from . import utils
 import cv2
-import utils
 import numpy as np
 import tensorflow as tf
 from utils.config import BATCH_SIZE

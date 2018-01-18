@@ -4,6 +4,8 @@ Created on Mar 23 15:29 2017
 
 @author: Denis Tome'
 """
+from __future__ import division
+
 import os
 import json
 import numpy as np
@@ -44,7 +46,7 @@ def detect_objects_heatmap(heatmap):
     objects = np.zeros((num_objects, 2), dtype=np.int32)
     pidx = 0
     for (dy, dx) in slices:
-        pos = [(dy.start + dy.stop - 1) / 2, (dx.start + dx.stop - 1) / 2]
+        pos = [(dy.start + dy.stop - 1) // 2, (dx.start + dx.stop - 1) // 2]
         if heatmap[pos[0], pos[1]] > config.CENTER_TR:
             objects[pidx, :] = pos
             pidx += 1
@@ -116,7 +118,7 @@ def detect_parts_heatmaps(heatmaps, centers, size, num_parts=14):
     for oid, (yc, xc) in enumerate(centers):
         part_hmap = skimage.transform.resize(
             np.clip(heatmaps[oid], -1, 1), size)
-        for pid in xrange(num_parts):
+        for pid in range(num_parts):
             y, x = np.unravel_index(np.argmax(part_hmap[:, :, pid]), size)
             parts[oid, pid] = y + yc - size[0] // 2, x + xc - size[1] // 2
             visible[oid, pid] = np.mean(
@@ -271,11 +273,11 @@ def crop_image(image, obj_pose):
     Returns the cropped image and the offset that is used to update the joint
     positions.
     """
-    offset_left = int(obj_pose[0] - config.INPUT_SIZE / 2)
-    offset_up = int(obj_pose[1] - config.INPUT_SIZE / 2)
+    offset_left = int(obj_pose[0] - config.INPUT_SIZE // 2)
+    offset_up = int(obj_pose[1] - config.INPUT_SIZE // 2)
     # just for checking that it's inside the image
-    offset_right = int(image.shape[1] - obj_pose[0] - config.INPUT_SIZE / 2)
-    offset_bottom = int(image.shape[0] - obj_pose[1] - config.INPUT_SIZE / 2)
+    offset_right = int(image.shape[1] - obj_pose[0] - config.INPUT_SIZE // 2)
+    offset_bottom = int(image.shape[0] - obj_pose[1] - config.INPUT_SIZE // 2)
 
     pad_left, pad_right, pad_up, pad_bottom = 0, 0, 0, 0
     if offset_left < 0:

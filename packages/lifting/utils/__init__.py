@@ -8,5 +8,5 @@ from .prob_model import *
 from .draw import *
 from .cpm import *
 from .process import *
-import config
-import upright_fast
+from . import config
+from . import upright_fast
