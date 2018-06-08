@@ -8,7 +8,6 @@ from . import utils
 import cv2
 import numpy as np
 import tensorflow as tf
-from utils.config import BATCH_SIZE
 
 import abc
 ABC = abc.ABCMeta('ABC', (object,), {})
@@ -77,11 +76,11 @@ class PoseEstimator(PoseEstimatorInterface):
             # placeholders for pose network
             self.pose_image_in = tf.placeholder(
                 tf.float32,
-                [BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 3])
+                [utils.config.BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 3])
 
             self.pose_centermap_in = tf.placeholder(
                 tf.float32,
-                [BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
+                [utils.config.BATCH_SIZE, utils.config.INPUT_SIZE, utils.config.INPUT_SIZE, 1])
 
             self.pred_2d_pose, self.likelihoods = utils.inference_pose(
                 self.pose_image_in, self.pose_centermap_in,
@@ -124,7 +123,7 @@ class PoseEstimator(PoseEstimatorInterface):
             b_image[0], centers,
             [utils.config.INPUT_SIZE, image.shape[1]],
             [utils.config.INPUT_SIZE, utils.config.INPUT_SIZE],
-            batch_size=BATCH_SIZE)
+            batch_size=utils.config.BATCH_SIZE)
 
         feed_dict = {
             self.pose_image_in: b_pose_image,
