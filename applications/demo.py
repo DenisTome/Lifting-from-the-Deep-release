@@ -36,14 +36,17 @@ def main():
     # load model
     pose_estimator.initialise()
 
-    # estimation
-    pose_2d, visibility, pose_3d = pose_estimator.estimate(image)
+    try:
+        # estimation
+        pose_2d, visibility, pose_3d = pose_estimator.estimate(image)
+
+        # Show 2D and 3D poses
+        display_results(image, pose_2d, visibility, pose_3d)
+    except ValueError:
+        print('No visible people in the image. Change CENTER_TR in packages/lifting/utils/config.py ...')
 
     # close model
     pose_estimator.close()
-
-    # Show 2D and 3D poses
-    display_results(image, pose_2d, visibility, pose_3d)
 
 
 def display_results(in_image, data_2d, joint_visibility, data_3d):
