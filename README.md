@@ -32,7 +32,7 @@ For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://gi
 - Run `demo.py` to evaluate the test image.
 
 ## Additional material
-- Project [webpage](http://visual.cs.ucl.ac.uk/pubs/liftingFromTheDeep/)
+- Project [webpage](https://denistome.com/papers/LiftingFromTheDeep.html)
 - Some [videos](https://youtu.be/tKfkGttx0qs).
 
 ## Citation
@@ -48,6 +48,10 @@ For this demo, CPM's caffe-models trained on the MPI datasets ([link](https://gi
 ## Notes
 
 The models provided for the demo are NOT the ones that have been used to generate results for the paper. We are still in the process of converting all the code.
+
+## Acknowledgements
+
+This work has been supported by the SecondHands project, funded from the EU Horizon 2020 Research and Innovation programme under grant agreement No 643950.
 
 ## References
 
