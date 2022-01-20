@@ -76,11 +76,11 @@ def plot_pose(pose):
     assert (pose.shape[0] == 3)
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    for c in _CONNECTION:
-        col = '#%02x%02x%02x' % joint_color(c[0])
-        ax.plot([pose[0, c[0]], pose[0, c[1]]],
-                [pose[1, c[0]], pose[1, c[1]]],
-                [pose[2, c[0]], pose[2, c[1]]], c=col)
+    for (c_0, c_1, *c_len) in _CONNECTION:
+        col = '#%02x%02x%02x' % joint_color(c_0)
+        ax.plot([pose[0, c_0], pose[0, c_1]], 
+                [pose[1, c_0], pose[1, c_1]], 
+                [pose[2, c_0], pose[2, c_1]], c=col)
     for j in range(pose.shape[1]):
         col = '#%02x%02x%02x' % joint_color(j)
         ax.scatter(pose[0, j], pose[1, j], pose[2, j],
